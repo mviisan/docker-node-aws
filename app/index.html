@@ -1,0 +1,87 @@
+<html lang="en">
+	</head>
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+	<style>
+		#container-edit {
+			display: none;
+	</style>
+<script>
+    (async function init() {
+        const response = await fetch('http://localhost:3000/get-account');
+        console.log("response", response);
+        const user = await response.json();
+        console.log(JSON.stringify(user));
+
+        document.getElementById('name').textContent = user.name ? user.name : 'John Smith';
+        document.getElementById('age').textContent = user.age ? user.age : '29';
+        document.getElementById('location').textContent = user.location ? user.location : 'London, United Kingdom';
+
+        const cont = document.getElementById('container');
+        cont.style.display = 'block';
+    })();
+
+    async function handleUpdateProfileRequest() {
+        const contEdit = document.getElementById('container-edit');
+        const cont = document.getElementById('container');
+
+        const payload = {
+            name: document.getElementById('input-name').value, 
+            age: document.getElementById('input-age').value, 
+            location: document.getElementById('input-location').value
+        };
+        
+        const response = await fetch('http://localhost:3000/update-profile', {
+            method: "POST",
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        const jsonResponse = await response.json();
+
+        document.getElementById('name').textContent = jsonResponse.name;
+        document.getElementById('age').textContent = jsonResponse.age;
+        document.getElementById('location').textContent = jsonResponse.location;
+
+        cont.style.display = 'block';
+        contEdit.style.display = 'none';
+    }
+
+    function updateProfile() {
+        const contEdit = document.getElementById('container-edit');
+        const cont = document.getElementById('container');
+
+        document.getElementById('input-name').value = document.getElementById('name').textContent;
+        document.getElementById('input-age').value = document.getElementById('age').textContent;
+        document.getElementById('input-location').value = document.getElementById('location').textContent;
+
+        cont.style.display = 'none';
+        contEdit.style.display = 'block';
+    }
+</script>
+<body>
+    <div class='container' id='container'>
+        <h1>My account</h1>
+        <span><i>Name: </i></span><h3 id='name'>John Smith</h3>
+        <hr />
+        <span><i>Age: </i></span><h3 id='age'>29</h3>
+        <hr />
+        <span><i>Location: </i></span><h3 id='location'>London, United Kingdom</h3>
+        <hr />
+        <button class='btn btn-md btn-dark' onclick="updateProfile()">Edit Account</button>
+    </div>
+    <div class='container' id='container-edit'>
+        <h1>My account</h1>
+        <span><i>Name: </i></span><label for='input-name'></label><input type="text" id='input-name' value='John Smith' />
+        <hr />
+        <span><i>Age: </i></span><label for='input-age'></label><input type="text" id='input-age' value='29' />
+        <hr />
+        <span><i>Location: </i></span><label for='input-location'></label><input type="text" id='input-location' value='London, United Kingdom' />
+        <hr />
+        <button class="btn btn-md btn-dark" onclick="handleUpdateProfileRequest()">Update Account</button>
+    </div>
+</body>
+</html>
