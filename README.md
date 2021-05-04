@@ -1,6 +1,6 @@
 # Docker container app
 
-This containerised app shows an user account settings screen. User can update its account (name, age, location)
+This containerised app shows an user account settings screen. User can update their account (name, age, location)
 
 All components are docker-based.
 
